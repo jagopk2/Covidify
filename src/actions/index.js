@@ -16,5 +16,23 @@ const setHandWashPoints = (points) => {
     payload: points,
   };
 };
+const setTotalOutsidePoints = (points) => {
+  return {
+    type: 'SET_TOTALOUTSIDE_POINTS',
+    payload: points,
+  };
+};
+const setTotalInsidePoints = (points) => {
+  return {
+    type: 'SET_TOTALINSIDE_POINTS',
+    payload: points,
+  };
+};
 
-export {setHomeLocation, setMaskPoints, setHandWashPoints};
+export {
+  setHomeLocation,
+  setMaskPoints,
+  setHandWashPoints,
+  setTotalInsidePoints,
+  setTotalOutsidePoints,
+};

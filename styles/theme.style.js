@@ -1,0 +1,25 @@
+export default {
+  PRIMARY_COLOR1: '#E00072',
+  PRIMARY_COLOR2: '#E00072',
+  PRIMARY_COLOR3: '#E04299',
+  SECONDARY_COLOR1: '#6200ED',
+  SECONDARY_COLOR2: '#BB86FC',
+  TEXT_COLOR1: 'white',
+};
+
+// export default {
+//   PRIMARY_COLOR1: '#E00072',
+//   PRIMARY_COLOR2: '#E00072',
+//   PRIMARY_COLOR3: '#E04299',
+//   SECONDARY_COLOR1: '#289EFE',
+//   SECONDARY_COLOR2: '#4AADFF',
+//   TEXT_COLOR1: 'white',
+// };
+// export default {
+//   PRIMARY_COLOR1: '#EA2637',
+//   PRIMARY_COLOR2: '#ec3c4b',
+//   PRIMARY_COLOR3: '#E4838C',
+//   SECONDARY_COLOR1: '#4D53DF',
+//   SECONDARY_COLOR2: '#9598E1',
+//   TEXT_COLOR1: 'white',
+// };

@@ -22,24 +22,41 @@ import {
   View,
 } from 'react-native';
 
-import HomePageScreen from './src/components/HomePageScreen';
-import LocationScreen from './src/components/LocationScreen';
+import FlashMessage from 'react-native-flash-message';
+import HomePageScreen from './src/Screens/HomePageScreen';
+import LocationScreen from './src/Screens/LocationScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider} from 'react-redux';
 import React from 'react';
+import {ThemeProvider} from 'react-native-elements';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import myTheme from './styles/theme.style';
 import store from './src/store';
 
 const Tab = createBottomTabNavigator();
+const theme = {
+  Button: {
+    raised: true,
+    titleStyle: {
+      color: myTheme.TEXT_COLOR1,
+    },
+    buttonStyle: {
+      backgroundColor: myTheme.PRIMARY_COLOR2,
+    },
+  },
+};
 const App = () => {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Home" component={HomePageScreen} />
-          <Tab.Screen name="Location" component={LocationScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <ThemeProvider theme={theme}>
+        <NavigationContainer>
+          <Tab.Navigator>
+            <Tab.Screen name="Home" component={HomePageScreen} />
+            <Tab.Screen name="Location" component={LocationScreen} />
+          </Tab.Navigator>
+          <FlashMessage position="top" animated={true} />
+        </NavigationContainer>
+      </ThemeProvider>
     </Provider>
   );
 };

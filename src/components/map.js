@@ -1,22 +1,21 @@
 import {
   AppRegistry,
-  Button,
   PermissionsAndroid,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {Button, Text} from 'react-native-elements';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import React, {useEffect, useState} from 'react';
 import {connect, useDispatch, useSelector} from 'react-redux';
 
 import AsyncStorage from '@react-native-community/async-storage';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import {setHomeLocation} from '../actions';
 
 const MapComponent = () => {
@@ -42,22 +41,26 @@ const MapComponent = () => {
         ) : null}
       </MapView>
       <Button
-        title={'Get Location'}
+        title={'Save Location'}
         onPress={async () => {
           const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           );
           if (granted == 'granted') {
-            Geolocation.getCurrentPosition(async (location) => {
-              console.log(location);
-              if (location) {
-                await AsyncStorage.setItem(
-                  'homeLocation',
-                  JSON.stringify(location),
-                );
-                dispatch(setHomeLocation(location));
-              }
-            });
+            Geolocation.getCurrentPosition(
+              async (location) => {
+                console.log(location);
+                if (location) {
+                  await AsyncStorage.setItem(
+                    'homeLocation',
+                    JSON.stringify(location),
+                  );
+                  dispatch(setHomeLocation(location));
+                }
+              },
+              (err) => console.log(err),
+              {enableHighAccuracy: true},
+            );
           } else {
             console.log('Please give permission');
           }
@@ -71,6 +74,7 @@ const MapComponent = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+    alignItems: 'center',
   },
 });
 
