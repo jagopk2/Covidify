@@ -5,6 +5,7 @@ export default {
   SECONDARY_COLOR1: '#6200ED',
   SECONDARY_COLOR2: '#BB86FC',
   TEXT_COLOR1: 'white',
+  TEXT_COLOR2: 'black',
 };
 
 // export default {

@@ -17,7 +17,7 @@ import {
   ProgressChart,
   StackedBarChart,
 } from 'react-native-chart-kit';
-import {Button, Text} from 'react-native-elements';
+import {Button, ListItem, Text} from 'react-native-elements';
 import {Col, Grid, Row} from 'react-native-easy-grid';
 import React, {useEffect, useState} from 'react';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -26,6 +26,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {
+  setActivity,
   setHandWashPoints,
   setHomeLocation,
   setMaskPoints,
@@ -46,6 +47,8 @@ import Pie from 'react-native-pie';
 import {ProgressCircle} from 'react-native-svg-charts';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import Realm from 'realm';
+import activitySchema from '../schema/activitySchema';
 import {getDistance} from 'geolib';
 import myTheme from '../../styles/theme.style';
 import {showMessage} from 'react-native-flash-message';
@@ -92,8 +95,25 @@ PushNotification.configure({
         if (action === 'Yes') {
           await AsyncStorage.setItem('maskPoints', tmp.toString());
           store.dispatch(setMaskPoints(tmp));
-
-          console.log('I am called');
+          Realm.open({schema: [activitySchema]})
+            .then((realm) => {
+              // Create Realm objects and write to local storage
+              realm.write(() => {
+                const activity = realm.create('Activity', {
+                  type: 'Mask',
+                  date: new Date(Date.now()),
+                  points: 10,
+                });
+                // activity.miles += 20; // Update a property value
+              });
+              const activities = realm.objects('Activity').sorted('date', true);
+              // console.log(activities, activities.length); // => 1
+              store.dispatch(setActivity(activities));
+              realm.close();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
         await AsyncStorage.setItem('totalOutsidePoints', tmp2.toString());
         // await AsyncStorage.setItem('maskNotificationStatus', 'true');
@@ -114,6 +134,25 @@ PushNotification.configure({
         if (action === 'Yes') {
           await AsyncStorage.setItem('handWashPoints', tmp.toString());
           store.dispatch(setHandWashPoints(tmp));
+          Realm.open({schema: [activitySchema]})
+            .then((realm) => {
+              // Create Realm objects and write to local storage
+              realm.write(() => {
+                const activity = realm.create('Activity', {
+                  type: 'HandWash',
+                  date: new Date(Date.now()),
+                  points: 10,
+                });
+                // activity.miles += 20; // Update a property value
+              });
+              const activities = realm.objects('Activity').sorted('date', true);
+              // console.log(activities, activities.length); // => 1
+              store.dispatch(setActivity(activities));
+              realm.close();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
         await AsyncStorage.setItem('totalInsidePoints', tmp2.toString());
 
@@ -214,28 +253,13 @@ BackgroundJob.register({
   },
 });
 
-const data = {
-  labels: ['HW'], // optional
-  data: [0.4, 0.6],
-};
-
-const chartConfig = {
-  backgroundGradientFrom: '#fff',
-  backgroundGradientFromOpacity: 0,
-  backgroundGradientTo: '#fff',
-  backgroundGradientToOpacity: 0.5,
-  color: (opacity = 1) => `rgba(23, 46, 131, ${opacity})`,
-  strokeWidth: 2, // optional, default 3
-  barPercentage: 0.5,
-  useShadowColorFromDataset: false, // optional
-};
-
 const HomePageScreen = () => {
   const location = useSelector((state) => state.location);
   const maskPoints = useSelector((state) => state.maskPoints);
   const handWashPoints = useSelector((state) => state.handWashPoints);
   const totalInsidePoints = useSelector((state) => state.totalInsidePoints);
   const totalOutsidePoints = useSelector((state) => state.totalOutsidePoints);
+  const activityData = useSelector((state) => state.activityData);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -305,139 +329,173 @@ const HomePageScreen = () => {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
-      {/* <Text>This is the HomePageScreen</Text>
+    console.log(activityData),
+    (
+      <ScrollView style={styles.container}>
+        {/* <Text>This is the HomePageScreen</Text>
       <Text>Mask Points {maskPoints}</Text>
       <Text>Hand Wash Points {handWashPoints}</Text>
       <Text>Total Outside Points {totalOutsidePoints}</Text>
       <Text>Hand Wash Points {totalInsidePoints}</Text> */}
-      <View style={styles.mainHeadingContainer}>
-        <Text style={styles.mainHeading}>Good Morning</Text>
-        <Feather
-          name={'sun'}
-          size={30}
-          color={'white'}
-          style={styles.mainHeadingIcon}
-        />
-      </View>
+        <View style={styles.mainHeadingContainer}>
+          <Text style={styles.mainHeading}>Good Morning</Text>
+          <Feather
+            name={'sun'}
+            size={30}
+            color={'white'}
+            style={styles.mainHeadingIcon}
+          />
+        </View>
 
-      <View style={styles.gridContainer}>
-        <Grid>
-          <Row style={styles.gridRow}>
-            <Col style={styles.gridCol}>
-              <CardCircle
-                obtained={maskPoints}
-                total={totalOutsidePoints}
-                color1={myTheme.PRIMARY_COLOR1}
-                color2={myTheme.PRIMARY_COLOR3}
-                heading={'Mask Points'}
-                goal={get_goal(maskPoints)}
-                fill={(maskPoints / get_goal(maskPoints)) * 100}
-              />
-            </Col>
-            <Col>
-              <CardCircle
-                obtained={handWashPoints}
-                total={totalInsidePoints}
-                color1={myTheme.SECONDARY_COLOR1}
-                color2={myTheme.SECONDARY_COLOR2}
-                heading={'Hand Wash Points'}
-                goal={get_goal(handWashPoints)}
-                fill={(handWashPoints / get_goal(handWashPoints)) * 100}
-              />
-            </Col>
-          </Row>
-        </Grid>
-      </View>
-      {/* <Text>{Math.ceil((maskPoints / totalOutsidePoints) * 100)}</Text>
+        <View style={styles.gridContainer}>
+          <Grid>
+            <Row style={styles.gridRow}>
+              <Col style={styles.gridCol}>
+                <CardCircle
+                  obtained={maskPoints}
+                  total={totalOutsidePoints}
+                  color1={myTheme.PRIMARY_COLOR1}
+                  color2={myTheme.PRIMARY_COLOR3}
+                  heading={'Mask Points'}
+                  goal={get_goal(maskPoints)}
+                  fill={(maskPoints / get_goal(maskPoints)) * 100}
+                />
+              </Col>
+              <Col>
+                <CardCircle
+                  obtained={handWashPoints}
+                  total={totalInsidePoints}
+                  color1={myTheme.SECONDARY_COLOR1}
+                  color2={myTheme.SECONDARY_COLOR2}
+                  heading={'Hand Wash Points'}
+                  goal={get_goal(handWashPoints)}
+                  fill={(handWashPoints / get_goal(handWashPoints)) * 100}
+                />
+              </Col>
+            </Row>
+          </Grid>
+        </View>
+        {/* <Text>{Math.ceil((maskPoints / totalOutsidePoints) * 100)}</Text>
         <Text>{Math.floor((1 - maskPoints / totalOutsidePoints) * 100)}</Text> */}
-      <View style={styles.g2container}>
-        <Text style={styles.g2MainHeading}>Overall Info</Text>
-        <LineCard
-          points={maskPoints}
-          total={totalOutsidePoints}
-          color1={myTheme.PRIMARY_COLOR1}
-          color2={myTheme.PRIMARY_COLOR3}
-          title={'Mask Weared'}
-        />
-        <LineCard
-          points={handWashPoints}
-          total={totalInsidePoints}
-          color1={myTheme.SECONDARY_COLOR1}
-          color2={myTheme.SECONDARY_COLOR2}
-          title={'Hand Washed'}
-        />
-      </View>
-      <View style={styles.g3Container}>
+        <View style={styles.g2container}>
+          <Text style={styles.g2MainHeading}>Overall Info</Text>
+          <LineCard
+            points={maskPoints}
+            total={totalOutsidePoints}
+            color1={myTheme.PRIMARY_COLOR1}
+            color2={myTheme.PRIMARY_COLOR3}
+            title={'Mask Weared'}
+          />
+          <LineCard
+            points={handWashPoints}
+            total={totalInsidePoints}
+            color1={myTheme.SECONDARY_COLOR1}
+            color2={myTheme.SECONDARY_COLOR2}
+            title={'Hand Washed'}
+          />
+        </View>
+
         <Button
-          title={'Start Service'}
+          title={'Schedule Job'}
           onPress={() => {
             BackgroundJob.schedule({
               jobKey: regularJobKey,
               period: 1000,
             });
           }}
-          containerStyle={styles.g2Button}
-          buttonStyle={{borderRadius: wp('20%')}}
         />
+
         <Button
-          title={'Stop Service'}
+          title={'Stop'}
           onPress={() => {
             BackgroundJob.cancelAll();
           }}
-          containerStyle={styles.g2Button}
-          buttonStyle={{
-            borderRadius: wp('20%'),
-            backgroundColor: myTheme.SECONDARY_COLOR1,
+        />
+        <Button
+          title={'notification 2'}
+          onPress={() => {
+            callNotification2();
+          }}
+          // buttonStyle={{backgroundColor: '#ec3c4b'}}
+        />
+        <Button
+          title={'dynamic'}
+          onPress={async () => {
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            );
+            if (granted == 'granted') {
+              Geolocation.getCurrentPosition(async (newLoc) => {
+                console.log(newLoc);
+                if (newLoc) {
+                  console.log('dynamic newLoc', JSON.stringify(newLoc));
+                  console.log(
+                    'Location Distance',
+                    getDistance(location.coords, newLoc.coords),
+                  );
+                }
+              });
+            } else {
+              console.log('Please give permission');
+            }
           }}
         />
-      </View>
-      <Button
-        title={'Schedule Job'}
-        onPress={() => {
-          BackgroundJob.schedule({
-            jobKey: regularJobKey,
-            period: 1000,
-          });
-        }}
-      />
+        <Button
+          title={'Realme'}
+          onPress={async () => {
+            Realm.open({schema: [activitySchema]})
+              .then((realm) => {
+                // Create Realm objects and write to local storage
+                realm.write(() => {
+                  const activity = realm.create('Activity', {
+                    type: 'Mask',
+                    date: new Date(Date.now()),
+                    points: 10,
+                  });
+                  // activity.miles += 20; // Update a property value
+                });
 
-      <Button
-        title={'Stop'}
-        onPress={() => {
-          BackgroundJob.cancelAll();
-        }}
-      />
-      <Button
-        title={'notification 2'}
-        onPress={() => {
-          callNotification2();
-        }}
-        // buttonStyle={{backgroundColor: '#ec3c4b'}}
-      />
-      <Button
-        title={'dynamic'}
-        onPress={async () => {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          );
-          if (granted == 'granted') {
-            Geolocation.getCurrentPosition(async (newLoc) => {
-              console.log(newLoc);
-              if (newLoc) {
-                console.log('dynamic newLoc', JSON.stringify(newLoc));
-                console.log(
-                  'Location Distance',
-                  getDistance(location.coords, newLoc.coords),
-                );
-              }
-            });
-          } else {
-            console.log('Please give permission');
-          }
-        }}
-      />
-    </ScrollView>
+                // Query Realm for all cars with a high mileage
+                const activities = realm.objects('Activity');
+
+                // Will return a Results object with our 1 car
+                console.log(activities, activities.length); // => 1
+                // Remember to close the realm when finished.
+                realm.close();
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }}
+        />
+
+        <Button
+          title={'Data'}
+          onPress={async () => {
+            // console.log(activityData);
+            Realm.open({schema: [activitySchema]})
+              .then((realm) => {
+                // Create Realm objects and write to local storage
+
+                // Query Realm for all cars with a high mileage
+                const activities = realm
+                  .objects('Activity')
+                  .sorted('date', true)
+                  .slice(0, 10);
+                console.log(activities, activities.length); // => 1
+                store.dispatch(setActivity(activities));
+                // Will return a Results object with our 1 car
+
+                // Remember to close the realm when finished.
+                realm.close();
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }}
+        />
+      </ScrollView>
+    )
   );
 };
 
@@ -479,6 +537,42 @@ const callNotification3 = () => {
     // onlyAlertOnce: true,
     tag: '3',
   });
+};
+const getActivityData = () => {
+  return Realm.open({schema: [activitySchema]})
+    .then((realm) => {
+      // Create Realm objects and write to local storage
+
+      // Query Realm for all cars with a high mileage
+      const activities = realm.objects('Activity');
+      console.log(activities, activities.length); // => 1
+
+      // Will return a Results object with our 1 car
+
+      // Remember to close the realm when finished.
+      realm.close();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+const setActivityData = (type, points) => {
+  Realm.open({schema: [activitySchema]})
+    .then((realm) => {
+      // Create Realm objects and write to local storage
+      realm.write(() => {
+        const activity = realm.create('Activity', {
+          type,
+          date: new Date(Date.now()),
+          points,
+        });
+        // activity.miles += 20; // Update a property value
+      });
+      realm.close();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 const get_goal = (point) => {
   if (point < 100) {
@@ -542,17 +636,6 @@ const styles = StyleSheet.create({
   mainHeadingIcon: {
     marginTop: hp('6%'),
     marginBottom: hp('3%'),
-  },
-  g3Container: {
-    flexDirection: 'row',
-    marginVertical: hp('3%'),
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  g2Button: {
-    marginHorizontal: wp('2.5%'),
-    width: wp('40%'),
-    borderRadius: wp('10%'),
   },
 });
 

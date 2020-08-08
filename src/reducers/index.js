@@ -4,6 +4,7 @@ const initialState = {
   handWashPoints: 0,
   totalOutsidePoints: 0,
   totalInsidePoints: 0,
+  activityData: [],
 };
 const locationReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -31,6 +32,11 @@ const locationReducer = (state = initialState, action) => {
       return {
         ...state,
         totalInsidePoints: action.payload,
+      };
+    case 'SET_ACTIVITY':
+      return {
+        ...state,
+        activityData: action.payload,
       };
     default:
       return state;

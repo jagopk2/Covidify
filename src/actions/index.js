@@ -28,6 +28,12 @@ const setTotalInsidePoints = (points) => {
     payload: points,
   };
 };
+const setActivity = (data) => {
+  return {
+    type: 'SET_ACTIVITY',
+    payload: data,
+  };
+};
 
 export {
   setHomeLocation,
@@ -35,4 +41,5 @@ export {
   setHandWashPoints,
   setTotalInsidePoints,
   setTotalOutsidePoints,
+  setActivity,
 };

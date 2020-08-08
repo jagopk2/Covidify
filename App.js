@@ -22,7 +22,9 @@ import {
   View,
 } from 'react-native';
 
+import ActivityScreen from './src/Screens/ActivityScreen';
 import FlashMessage from 'react-native-flash-message';
+import GuidelineScreen from './src/Screens/GuideLineScreen';
 import HomePageScreen from './src/Screens/HomePageScreen';
 import LocationScreen from './src/Screens/LocationScreen';
 import {NavigationContainer} from '@react-navigation/native';
@@ -53,6 +55,8 @@ const App = () => {
           <Tab.Navigator>
             <Tab.Screen name="Home" component={HomePageScreen} />
             <Tab.Screen name="Location" component={LocationScreen} />
+            <Tab.Screen name="Guidelines" component={GuidelineScreen} />
+            <Tab.Screen name="Activity" component={ActivityScreen} />
           </Tab.Navigator>
           <FlashMessage position="top" animated={true} />
         </NavigationContainer>
