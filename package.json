@@ -27,7 +27,8 @@
     "react-native-easy-grid": "^0.2.2",
     "react-native-elements": "^2.1.0",
     "react-native-fast-image": "^8.3.2",
-    "react-native-flash-message": "^0.1.15",
+    "react-native-flash-message": "^0.1.16",
+    "react-native-floating-action": "^1.21.0",
     "react-native-geolocation-service": "^5.0.0",
     "react-native-gesture-handler": "^1.7.0",
     "react-native-image-slider-box": "^1.0.12",
@@ -43,7 +44,6 @@
     "react-native-svg-charts": "^5.4.0",
     "react-native-vector-icons": "^7.0.0",
     "react-redux": "^7.2.1",
-    "realm": "^6.0.4",
     "redux": "^4.0.5"
   },
   "devDependencies": {

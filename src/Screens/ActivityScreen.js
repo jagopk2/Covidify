@@ -16,10 +16,11 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 
+import AsyncStorage from '@react-native-community/async-storage';
 import FastImage from 'react-native-fast-image';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import activitySchema from '../schema/activitySchema';
+import Foundation from 'react-native-vector-icons/Foundation';
 // import ToggleBox from 'react-native-show-hide-toggle-box';
 import myTheme from '../../styles/theme.style';
 import {setActivity} from '../actions';
@@ -27,35 +28,18 @@ import store from '../store';
 
 const ActivityScreen = ({navigation}) => {
   const activityData = useSelector((state) => state.activityData);
-  const [isFetching, setIsFetching] = useState(false);
+  const [animationState, setAnimationState] = useState('reward');
+  const dispatch = useDispatch();
   useEffect(() => {
-    Realm.open({schema: [activitySchema]})
-      .then((realm) => {
-        // Create Realm objects and write to local storage
-        setIsFetching(true);
-        // Query Realm for all cars with a high mileage
-        const activities = realm
-          .objects('Activity')
-          .sorted('date', true)
-          .slice(0, 10);
-        // console.log(activities, activities.length); // => 1
-        // store.dispatch(setActivity(activities));
-        let newActivities = JSON.parse(JSON.stringify(activities));
-
-        // plainResults = JSON.parse(JSON.stringfy(results))
-        console.log(newActivities);
-        store.dispatch(setActivity(newActivities));
-        setIsFetching(false);
-        realm.close();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const getActivityData = async () => {
+      var activity = await AsyncStorage.getItem('activityData');
+      if (activity) {
+        // console.log('///', loc);
+        dispatch(setActivity(JSON.parse(activity)));
+      }
+    };
+    getActivityData();
   }, []);
-
-  if (isFetching) {
-    return <Text>Loading</Text>;
-  }
 
   return (
     <ScrollView style={styles.container}>
@@ -64,9 +48,9 @@ const ActivityScreen = ({navigation}) => {
       /> */}
       <View style={styles.mainHeadingContainer}>
         <Text style={styles.mainHeading}>My Activity</Text>
-        <Feather
+        <Foundation
           ImageComponent={FastImage}
-          name={'book'}
+          name={'clipboard-notes'}
           size={30}
           color={'white'}
           style={styles.mainHeadingIcon}
@@ -94,12 +78,12 @@ const ActivityScreen = ({navigation}) => {
                 style={{
                   ...styles.activityRowContainer,
                   backgroundColor:
-                    data.type == 'Mask'
+                    data.type == 'mask'
                       ? myTheme.PRIMARY_COLOR3
                       : myTheme.SECONDARY_COLOR2,
                 }}>
                 <FontAwesome5
-                  name={data.type == 'Mask' ? 'head-side-mask' : 'hands-wash'}
+                  name={data.type == 'mask' ? 'head-side-mask' : 'hands-wash'}
                   size={25}
                   color={myTheme.TEXT_COLOR1}
                 />
@@ -112,7 +96,14 @@ const ActivityScreen = ({navigation}) => {
             );
           })
         ) : (
-          <Text>No Activity </Text>
+          <Text
+            style={{
+              textAlign: 'center',
+              marginTop: hp('30%'),
+              fontSize: wp('7%'),
+            }}>
+            No Activity For Now{' '}
+          </Text>
         )}
       </View>
     </ScrollView>
@@ -122,6 +113,7 @@ const ActivityScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+    flex: 1,
   },
   mainHeadingContainer: {
     backgroundColor: myTheme.PRIMARY_COLOR2,
@@ -135,7 +127,8 @@ const styles = StyleSheet.create({
   mainHeading: {
     marginTop: hp('5%'),
     marginBottom: hp('3%'),
-    marginHorizontal: wp('7%'),
+    marginLeft: wp('7%'),
+    marginRight: wp('5%'),
 
     // textAlign: 'center',
     fontSize: wp('7%'),

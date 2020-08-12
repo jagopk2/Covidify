@@ -22,10 +22,14 @@ import {
   View,
 } from 'react-native';
 
+import AchievementScreen from './src/Screens/AchievementScreen';
 import ActivityScreen from './src/Screens/ActivityScreen';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import FlashMessage from 'react-native-flash-message';
+import Foundation from 'react-native-vector-icons/Foundation';
 import GuidelineScreen from './src/Screens/GuideLineScreen';
 import HomePageScreen from './src/Screens/HomePageScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import LocationScreen from './src/Screens/LocationScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider} from 'react-redux';
@@ -52,11 +56,65 @@ const App = () => {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <NavigationContainer>
-          <Tab.Navigator>
-            <Tab.Screen name="Home" component={HomePageScreen} />
-            <Tab.Screen name="Location" component={LocationScreen} />
-            <Tab.Screen name="Guidelines" component={GuidelineScreen} />
-            <Tab.Screen name="Activity" component={ActivityScreen} />
+          <Tab.Navigator
+            tabBarOptions={{
+              activeTintColor: myTheme.PRIMARY_COLOR3,
+              inactiveTintColor: 'grey',
+            }}>
+            <Tab.Screen
+              name="Home"
+              component={HomePageScreen}
+              options={{
+                tabBarLabel: 'Home',
+                tabBarIcon: ({color, size}) => (
+                  <AntDesign name="home" color={color} size={size} />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Location"
+              component={LocationScreen}
+              options={{
+                tabBarLabel: 'Location',
+                tabBarIcon: ({color, size}) => (
+                  <Foundation name="map" color={color} size={size} />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Guidelines"
+              component={GuidelineScreen}
+              options={{
+                tabBarLabel: 'Guidelines',
+                tabBarIcon: ({color, size}) => (
+                  <AntDesign name="book" color={color} size={size} />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Achievements"
+              component={AchievementScreen}
+              options={{
+                tabBarLabel: 'Achievement',
+                tabBarIcon: ({color, size}) => (
+                  <Ionicons name="medal-outline" color={color} size={size} />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Activity"
+              component={ActivityScreen}
+              options={{
+                tabBarLabel: 'Activity',
+                tabBarIcon: ({color, size}) => (
+                  <Foundation
+                    name="clipboard-notes"
+                    color={color}
+                    size={size}
+                  />
+                ),
+              }}
+            />
           </Tab.Navigator>
           <FlashMessage position="top" animated={true} />
         </NavigationContainer>

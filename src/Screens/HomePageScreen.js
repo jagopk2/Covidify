@@ -41,15 +41,15 @@ import {Bar} from 'react-native-progress';
 import CardCircle from '../components/CardCirle';
 import Feather from 'react-native-vector-icons/Feather';
 import Geolocation from 'react-native-geolocation-service';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import LineCard from '../components/LineCard';
 import Pie from 'react-native-pie';
 // import ProgressCircle from 'react-native-progress-circle';
 import {ProgressCircle} from 'react-native-svg-charts';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import Realm from 'realm';
-import activitySchema from '../schema/activitySchema';
 import {getDistance} from 'geolib';
+import {get_goal} from '../helpers/achievementHelper';
 import myTheme from '../../styles/theme.style';
 import {showMessage} from 'react-native-flash-message';
 import store from '../store';
@@ -95,25 +95,20 @@ PushNotification.configure({
         if (action === 'Yes') {
           await AsyncStorage.setItem('maskPoints', tmp.toString());
           store.dispatch(setMaskPoints(tmp));
-          Realm.open({schema: [activitySchema]})
-            .then((realm) => {
-              // Create Realm objects and write to local storage
-              realm.write(() => {
-                const activity = realm.create('Activity', {
-                  type: 'Mask',
-                  date: new Date(Date.now()),
-                  points: 10,
-                });
-                // activity.miles += 20; // Update a property value
-              });
-              const activities = realm.objects('Activity').sorted('date', true);
-              // console.log(activities, activities.length); // => 1
-              store.dispatch(setActivity(activities));
-              realm.close();
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          let activities = await AsyncStorage.getItem('activityData');
+          if (activities) {
+            activities = JSON.parse(activities);
+            let temp = [
+              ...activities,
+              {type: 'mask', points: '10', date: Date.now()},
+            ];
+            await AsyncStorage.setItem('activityData', JSON.stringify(temp));
+            store.dispatch(setActivity(temp));
+          } else {
+            let temp = [{type: 'mask', points: '10', date: Date.now()}];
+            await AsyncStorage.setItem('activityData', JSON.stringify(temp));
+            store.dispatch(setActivity(temp));
+          }
         }
         await AsyncStorage.setItem('totalOutsidePoints', tmp2.toString());
         // await AsyncStorage.setItem('maskNotificationStatus', 'true');
@@ -134,25 +129,20 @@ PushNotification.configure({
         if (action === 'Yes') {
           await AsyncStorage.setItem('handWashPoints', tmp.toString());
           store.dispatch(setHandWashPoints(tmp));
-          Realm.open({schema: [activitySchema]})
-            .then((realm) => {
-              // Create Realm objects and write to local storage
-              realm.write(() => {
-                const activity = realm.create('Activity', {
-                  type: 'HandWash',
-                  date: new Date(Date.now()),
-                  points: 10,
-                });
-                // activity.miles += 20; // Update a property value
-              });
-              const activities = realm.objects('Activity').sorted('date', true);
-              // console.log(activities, activities.length); // => 1
-              store.dispatch(setActivity(activities));
-              realm.close();
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          let activities = await AsyncStorage.getItem('activityData');
+          if (activities) {
+            activities = JSON.parse(activities);
+            let temp = [
+              ...activities,
+              {type: 'handWash', points: '10', date: Date.now()},
+            ];
+            await AsyncStorage.setItem('activityData', JSON.stringify(temp));
+            store.dispatch(setActivity(temp));
+          } else {
+            let temp = [{type: 'handWash', points: '10', date: Date.now()}];
+            await AsyncStorage.setItem('activityData', JSON.stringify(temp));
+            store.dispatch(setActivity(temp));
+          }
         }
         await AsyncStorage.setItem('totalInsidePoints', tmp2.toString());
 
@@ -329,174 +319,158 @@ const HomePageScreen = () => {
   }, []);
 
   return (
-    console.log(activityData),
-    (
-      <ScrollView style={styles.container}>
-        {/* <Text>This is the HomePageScreen</Text>
+    <ScrollView style={styles.container}>
+      {/* <Text>This is the HomePageScreen</Text>
       <Text>Mask Points {maskPoints}</Text>
       <Text>Hand Wash Points {handWashPoints}</Text>
       <Text>Total Outside Points {totalOutsidePoints}</Text>
       <Text>Hand Wash Points {totalInsidePoints}</Text> */}
-        <View style={styles.mainHeadingContainer}>
-          <Text style={styles.mainHeading}>Good Morning</Text>
-          <Feather
-            name={'sun'}
-            size={30}
-            color={'white'}
-            style={styles.mainHeadingIcon}
-          />
-        </View>
+      <View style={styles.mainHeadingContainer}>
+        <Text style={styles.mainHeading}>{greetingText()}</Text>
+        {greetingIcon()}
+      </View>
 
-        <View style={styles.gridContainer}>
-          <Grid>
-            <Row style={styles.gridRow}>
-              <Col style={styles.gridCol}>
-                <CardCircle
-                  obtained={maskPoints}
-                  total={totalOutsidePoints}
-                  color1={myTheme.PRIMARY_COLOR1}
-                  color2={myTheme.PRIMARY_COLOR3}
-                  heading={'Mask Points'}
-                  goal={get_goal(maskPoints)}
-                  fill={(maskPoints / get_goal(maskPoints)) * 100}
-                />
-              </Col>
-              <Col>
-                <CardCircle
-                  obtained={handWashPoints}
-                  total={totalInsidePoints}
-                  color1={myTheme.SECONDARY_COLOR1}
-                  color2={myTheme.SECONDARY_COLOR2}
-                  heading={'Hand Wash Points'}
-                  goal={get_goal(handWashPoints)}
-                  fill={(handWashPoints / get_goal(handWashPoints)) * 100}
-                />
-              </Col>
-            </Row>
-          </Grid>
-        </View>
-        {/* <Text>{Math.ceil((maskPoints / totalOutsidePoints) * 100)}</Text>
+      <View style={styles.gridContainer}>
+        <Grid>
+          <Row style={styles.gridRow}>
+            <Col style={styles.gridCol}>
+              <CardCircle
+                obtained={maskPoints}
+                total={totalOutsidePoints}
+                color1={myTheme.PRIMARY_COLOR1}
+                color2={myTheme.PRIMARY_COLOR3}
+                heading={'Mask Points'}
+                goal={get_goal(maskPoints)}
+                fill={(maskPoints / get_goal(maskPoints)) * 100}
+              />
+            </Col>
+            <Col>
+              <CardCircle
+                obtained={handWashPoints}
+                total={totalInsidePoints}
+                color1={myTheme.SECONDARY_COLOR1}
+                color2={myTheme.SECONDARY_COLOR2}
+                heading={'Hand Wash Points'}
+                goal={get_goal(handWashPoints)}
+                fill={(handWashPoints / get_goal(handWashPoints)) * 100}
+              />
+            </Col>
+          </Row>
+        </Grid>
+      </View>
+      {/* <Text>{Math.ceil((maskPoints / totalOutsidePoints) * 100)}</Text>
         <Text>{Math.floor((1 - maskPoints / totalOutsidePoints) * 100)}</Text> */}
-        <View style={styles.g2container}>
-          <Text style={styles.g2MainHeading}>Overall Info</Text>
-          <LineCard
-            points={maskPoints}
-            total={totalOutsidePoints}
-            color1={myTheme.PRIMARY_COLOR1}
-            color2={myTheme.PRIMARY_COLOR3}
-            title={'Mask Weared'}
-          />
-          <LineCard
-            points={handWashPoints}
-            total={totalInsidePoints}
-            color1={myTheme.SECONDARY_COLOR1}
-            color2={myTheme.SECONDARY_COLOR2}
-            title={'Hand Washed'}
-          />
-        </View>
+      <View style={styles.g2container}>
+        <Text style={styles.g2MainHeading}>Overall Info</Text>
+        <LineCard
+          points={maskPoints}
+          total={totalOutsidePoints}
+          color1={myTheme.PRIMARY_COLOR1}
+          color2={myTheme.PRIMARY_COLOR3}
+          title={'Mask Weared'}
+        />
+        <LineCard
+          points={handWashPoints}
+          total={totalInsidePoints}
+          color1={myTheme.SECONDARY_COLOR1}
+          color2={myTheme.SECONDARY_COLOR2}
+          title={'Hand Washed'}
+        />
+      </View>
 
-        <Button
-          title={'Schedule Job'}
-          onPress={() => {
-            BackgroundJob.schedule({
-              jobKey: regularJobKey,
-              period: 1000,
+      {/* <Button
+        title={'Schedule Job'}
+        onPress={() => {
+          BackgroundJob.schedule({
+            jobKey: regularJobKey,
+            period: 1000,
+          });
+        }}
+      />
+
+      <Button
+        title={'Stop'}
+        onPress={() => {
+          BackgroundJob.cancelAll();
+        }}
+      />
+      <Button
+        title={'notification 2'}
+        onPress={() => {
+          callNotification2();
+        }}
+        // buttonStyle={{backgroundColor: '#ec3c4b'}}
+      />
+      <Button
+        title={'dynamic'}
+        onPress={async () => {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
+          if (granted == 'granted') {
+            Geolocation.getCurrentPosition(async (newLoc) => {
+              console.log(newLoc);
+              if (newLoc) {
+                console.log('dynamic newLoc', JSON.stringify(newLoc));
+                console.log(
+                  'Location Distance',
+                  getDistance(location.coords, newLoc.coords),
+                );
+              }
             });
-          }}
-        />
-
-        <Button
-          title={'Stop'}
-          onPress={() => {
-            BackgroundJob.cancelAll();
-          }}
-        />
-        <Button
-          title={'notification 2'}
-          onPress={() => {
-            callNotification2();
-          }}
-          // buttonStyle={{backgroundColor: '#ec3c4b'}}
-        />
-        <Button
-          title={'dynamic'}
-          onPress={async () => {
-            const granted = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            );
-            if (granted == 'granted') {
-              Geolocation.getCurrentPosition(async (newLoc) => {
-                console.log(newLoc);
-                if (newLoc) {
-                  console.log('dynamic newLoc', JSON.stringify(newLoc));
-                  console.log(
-                    'Location Distance',
-                    getDistance(location.coords, newLoc.coords),
-                  );
-                }
-              });
-            } else {
-              console.log('Please give permission');
-            }
-          }}
-        />
-        <Button
-          title={'Realme'}
-          onPress={async () => {
-            Realm.open({schema: [activitySchema]})
-              .then((realm) => {
-                // Create Realm objects and write to local storage
-                realm.write(() => {
-                  const activity = realm.create('Activity', {
-                    type: 'Mask',
-                    date: new Date(Date.now()),
-                    points: 10,
-                  });
-                  // activity.miles += 20; // Update a property value
-                });
-
-                // Query Realm for all cars with a high mileage
-                const activities = realm.objects('Activity');
-
-                // Will return a Results object with our 1 car
-                console.log(activities, activities.length); // => 1
-                // Remember to close the realm when finished.
-                realm.close();
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          }}
-        />
-
-        <Button
-          title={'Data'}
-          onPress={async () => {
-            // console.log(activityData);
-            Realm.open({schema: [activitySchema]})
-              .then((realm) => {
-                // Create Realm objects and write to local storage
-
-                // Query Realm for all cars with a high mileage
-                const activities = realm
-                  .objects('Activity')
-                  .sorted('date', true)
-                  .slice(0, 10);
-                console.log(activities, activities.length); // => 1
-                store.dispatch(setActivity(activities));
-                // Will return a Results object with our 1 car
-
-                // Remember to close the realm when finished.
-                realm.close();
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          }}
-        />
-      </ScrollView>
-    )
+          } else {
+            console.log('Please give permission');
+          }
+        }}
+      /> */}
+    </ScrollView>
   );
+};
+
+const greetingText = () => {
+  var today = new Date();
+  var curHr = today.getHours();
+
+  if (curHr < 12) {
+    return 'Good Morning';
+  } else if (curHr < 18) {
+    return 'Good Afternoon';
+  } else {
+    return 'Good Evening';
+  }
+};
+const greetingIcon = () => {
+  var today = new Date();
+  var curHr = today.getHours();
+
+  if (curHr < 12) {
+    return (
+      <Feather
+        name={'sun'}
+        size={30}
+        color={'white'}
+        style={styles.mainHeadingIcon}
+      />
+    );
+  } else if (curHr < 18) {
+    return (
+      <Ionicons
+        name={'partly-sunny-outline'}
+        size={30}
+        color={'white'}
+        style={styles.mainHeadingIcon}
+      />
+    );
+  } else {
+    return (
+      <Feather
+        name={'moon'}
+        size={30}
+        color={'white'}
+        style={styles.mainHeadingIcon}
+      />
+    );
+  }
 };
 
 const callNotification = () => {
@@ -510,6 +484,7 @@ const callNotification = () => {
     autoCancel: false,
     onlyAlertOnce: true,
     tag: '1',
+    smallIcon: 'ic_launcher',
   });
 };
 const callNotification2 = () => {
@@ -521,6 +496,8 @@ const callNotification2 = () => {
     invokeApp: false,
     ongoing: true,
     // autoCancel: true,
+    smallIcon: 'ic_launcher',
+
     // onlyAlertOnce: true,
     tag: '2',
   });
@@ -532,65 +509,14 @@ const callNotification3 = () => {
     message: 'Did You Washed Your Hands?', // (required)
     actions: '["Yes", "No"]',
     invokeApp: false,
+    smallIcon: 'ic_launcher',
     ongoing: true,
     // autoCancel: true,
     // onlyAlertOnce: true,
     tag: '3',
   });
 };
-const getActivityData = () => {
-  return Realm.open({schema: [activitySchema]})
-    .then((realm) => {
-      // Create Realm objects and write to local storage
 
-      // Query Realm for all cars with a high mileage
-      const activities = realm.objects('Activity');
-      console.log(activities, activities.length); // => 1
-
-      // Will return a Results object with our 1 car
-
-      // Remember to close the realm when finished.
-      realm.close();
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-const setActivityData = (type, points) => {
-  Realm.open({schema: [activitySchema]})
-    .then((realm) => {
-      // Create Realm objects and write to local storage
-      realm.write(() => {
-        const activity = realm.create('Activity', {
-          type,
-          date: new Date(Date.now()),
-          points,
-        });
-        // activity.miles += 20; // Update a property value
-      });
-      realm.close();
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-const get_goal = (point) => {
-  if (point < 100) {
-    return 100;
-  } else if (point < 250) {
-    return 250;
-  } else if (point < 500) {
-    return 500;
-  } else if (point < 1000) {
-    return 1000;
-  } else if (point < 5000) {
-    return 5000;
-  } else if (point < 10000) {
-    return 10000;
-  } else if (point < 20000) {
-    return 20000;
-  }
-};
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5F4FC',
@@ -634,8 +560,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   mainHeadingIcon: {
-    marginTop: hp('6%'),
+    marginTop: hp('5%'),
     marginBottom: hp('3%'),
+  },
+  g3container: {
+    width: wp('90%'),
+    marginHorizontal: wp('5%'),
+    backgroundColor: 'white',
+    borderRadius: wp('5%'),
   },
 });
 

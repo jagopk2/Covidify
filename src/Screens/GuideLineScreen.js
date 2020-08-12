@@ -115,6 +115,7 @@ const GuidelineScreen = () => {
           resizeMode={'stretch'}
         />
       </View>
+      <View style={{marginTop: hp('5%')}}></View>
     </ScrollView>
   );
 };
@@ -129,13 +130,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   mainHeadingIcon: {
-    marginTop: hp('6%'),
+    marginTop: hp('5%'),
     marginBottom: hp('3%'),
   },
   mainHeading: {
     marginTop: hp('5%'),
     marginBottom: hp('3%'),
-    marginHorizontal: wp('7%'),
+    marginLeft: wp('7%'),
+    marginRight: wp('3%'),
 
     // textAlign: 'center',
     fontSize: wp('7%'),
@@ -152,9 +154,10 @@ const styles = StyleSheet.create({
     // borderTopRightRadius: wp('5%'),
   },
   guidelineText: {
-    marginVertical: hp('1%'),
     fontSize: wp('6%'),
     color: myTheme.TEXT_COLOR2,
+    fontWeight: 'bold',
+    marginBottom: hp('3%'),
   },
 });
 

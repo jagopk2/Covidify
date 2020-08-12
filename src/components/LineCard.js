@@ -33,7 +33,7 @@ const LineCard = ({points, total, color1, color2, title}) => {
       <Text style={styles.rightText}>
         {points / 10}/{total / 10}
       </Text>
-      <Text style={styles.rightText2}>{'>'}</Text>
+      {/* <Text style={styles.rightText2}>{'>'}</Text> */}
     </View>
   );
 };
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
   barStyle: {
-    marginLeft: wp('14%'),
+    marginLeft: wp('11%'),
   },
 });
 
