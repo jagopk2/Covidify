@@ -17,6 +17,7 @@ import {
 } from 'react-native-responsive-screen';
 
 import {Bar} from 'react-native-progress';
+import myTheme from '../../styles/theme.style';
 
 const AchievementLineCard = ({
   points,
@@ -48,6 +49,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
+    // backgroundColor: myTheme.BACKGROUND_COLOR,
     // justifyContent: 'space-between',
     marginVertical: hp('2%'),
   },

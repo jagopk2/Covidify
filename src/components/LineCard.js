@@ -17,6 +17,7 @@ import {
 } from 'react-native-responsive-screen';
 
 import {Bar} from 'react-native-progress';
+import myTheme from '../../styles/theme.style';
 
 const LineCard = ({points, total, color1, color2, title}) => {
   return (
@@ -28,7 +29,11 @@ const LineCard = ({points, total, color1, color2, title}) => {
         color={color1}
         unfilledColor={'white'}
         borderColor={color1}
-        style={styles.barStyle}
+        style={
+          title == 'Worn Mask'
+            ? {marginLeft: wp('17%')}
+            : {marginLeft: wp('11%')}
+        }
       />
       <Text style={styles.rightText}>
         {points / 10}/{total / 10}

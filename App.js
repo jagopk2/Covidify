@@ -58,7 +58,7 @@ const App = () => {
         <NavigationContainer>
           <Tab.Navigator
             tabBarOptions={{
-              activeTintColor: myTheme.PRIMARY_COLOR3,
+              activeTintColor: myTheme.PRIMARY_COLOR1,
               inactiveTintColor: 'grey',
             }}>
             <Tab.Screen
@@ -81,16 +81,7 @@ const App = () => {
                 ),
               }}
             />
-            <Tab.Screen
-              name="Guidelines"
-              component={GuidelineScreen}
-              options={{
-                tabBarLabel: 'Guidelines',
-                tabBarIcon: ({color, size}) => (
-                  <AntDesign name="book" color={color} size={size} />
-                ),
-              }}
-            />
+
             <Tab.Screen
               name="Achievements"
               component={AchievementScreen}
@@ -112,6 +103,16 @@ const App = () => {
                     color={color}
                     size={size}
                   />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Guidelines"
+              component={GuidelineScreen}
+              options={{
+                tabBarLabel: 'Guidelines',
+                tabBarIcon: ({color, size}) => (
+                  <AntDesign name="book" color={color} size={size} />
                 ),
               }}
             />

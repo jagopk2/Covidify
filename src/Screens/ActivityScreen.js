@@ -52,7 +52,7 @@ const ActivityScreen = ({navigation}) => {
           ImageComponent={FastImage}
           name={'clipboard-notes'}
           size={30}
-          color={'white'}
+          color={myTheme.ICON_COLOR1}
           style={styles.mainHeadingIcon}
         />
       </View>
@@ -62,7 +62,7 @@ const ActivityScreen = ({navigation}) => {
             // key={i}
             style={{
               ...styles.activityRowContainer,
-              backgroundColor: myTheme.PRIMARY_COLOR3,
+              backgroundColor: myTheme.PRIMARY_COLOR1,
             }}>
             <Text style={styles.activityRowText}>Type</Text>
             <Text style={styles.activityRowText}>Points</Text>
@@ -79,8 +79,8 @@ const ActivityScreen = ({navigation}) => {
                   ...styles.activityRowContainer,
                   backgroundColor:
                     data.type == 'mask'
-                      ? myTheme.PRIMARY_COLOR3
-                      : myTheme.SECONDARY_COLOR2,
+                      ? myTheme.PRIMARY_COLOR1
+                      : myTheme.SECONDARY_COLOR1,
                 }}>
                 <FontAwesome5
                   name={data.type == 'mask' ? 'head-side-mask' : 'hands-wash'}
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
 
     // textAlign: 'center',
     fontSize: wp('7%'),
-    color: 'white',
+    color: myTheme.TEXT_COLOR1,
   },
   activityRowContainer: {
     flexDirection: 'row',

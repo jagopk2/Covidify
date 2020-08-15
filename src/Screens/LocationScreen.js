@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Button, ListItem, Text} from 'react-native-elements';
+import {Button, ListItem, Text, colors} from 'react-native-elements';
 import React, {useEffect, useState} from 'react';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import {
@@ -42,7 +42,7 @@ const LocationScreen = () => {
           style={styles.mainIcon}
           name={'add-location'}
           size={30}
-          color={'white'}
+          color={myTheme.ICON_COLOR1}
         />
       </View>
 
@@ -71,6 +71,9 @@ const LocationScreen = () => {
           }}
           containerStyle={styles.g2Button}
           buttonStyle={{borderRadius: wp('20%')}}
+          titleStyle={{
+            color: myTheme.TEXT_COLOR1,
+          }}
         />
         <Button
           title={'Stop Service'}
@@ -84,6 +87,9 @@ const LocationScreen = () => {
             borderRadius: wp('20%'),
             backgroundColor: myTheme.SECONDARY_COLOR1,
           }}
+          titleStyle={{
+            color: myTheme.TEXT_COLOR1,
+          }}
         />
       </View>
     </View>
@@ -92,7 +98,7 @@ const LocationScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: myTheme.BACKGROUND_COLOR,
   },
   mainHeading: {
     marginTop: hp('5%'),
@@ -100,8 +106,9 @@ const styles = StyleSheet.create({
     marginLeft: wp('7%'),
     marginRight: wp('5%'),
 
+    // textAlign: 'center',
     fontSize: wp('7%'),
-    color: 'white',
+    color: myTheme.TEXT_COLOR1,
   },
   mainIcon: {
     marginTop: hp('5%'),
@@ -122,6 +129,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp('2.5%'),
     width: wp('40%'),
     borderRadius: wp('10%'),
+    color: myTheme.TEXT_COLOR1,
   },
 });
 

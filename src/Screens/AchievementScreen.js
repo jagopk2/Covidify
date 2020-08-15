@@ -112,7 +112,7 @@ const AchievementScreen = ({navigation}) => {
           ImageComponent={FastImage}
           name={'badge'}
           size={30}
-          color={'white'}
+          color={myTheme.ICON_COLOR1}
           style={styles.mainHeadingIcon}
         />
       </View>
@@ -184,7 +184,7 @@ const AchievementScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: myTheme.BACKGROUND_COLOR,
   },
   mainHeadingContainer: {
     backgroundColor: myTheme.PRIMARY_COLOR2,
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
 
     // textAlign: 'center',
     fontSize: wp('7%'),
-    color: 'white',
+    color: myTheme.TEXT_COLOR1,
   },
   g2container: {
     // height: hp('30%'),
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp('5%'),
     backgroundColor: 'white',
     borderRadius: wp('5%'),
-    backgroundColor: myTheme.WHITE_SHADE1,
+    backgroundColor: myTheme.BACKGROUND_COLOR2,
   },
   g2MainHeading: {
     marginTop: hp('2%'),
@@ -232,12 +232,13 @@ const styles = StyleSheet.create({
     marginHorizontal: wp('5%'),
     backgroundColor: 'white',
     borderRadius: wp('5%'),
+    backgroundColor: myTheme.BACKGROUND_COLOR,
     // flexDirection: 'row',
   },
 
   logoCard: {
     marginHorizontal: wp('2%'),
-    backgroundColor: myTheme.WHITE_SHADE1,
+    backgroundColor: myTheme.BACKGROUND_COLOR2,
     alignItems: 'center',
     height: 'auto',
     width: wp('25%'),

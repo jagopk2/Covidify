@@ -65,8 +65,8 @@ const MapComponent = () => {
           <Marker
             key={Date.now().toString()}
             coordinate={location.coords}
-            title={'location'}
-            description={'My Location'}
+            title={'Home Location'}
+            // description={'My Location'}
             draggable={true}
           />
         ) : null}

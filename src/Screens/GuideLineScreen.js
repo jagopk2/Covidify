@@ -21,6 +21,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import {SliderBox} from 'react-native-image-slider-box';
 // import ToggleBox from 'react-native-show-hide-toggle-box';
 import myTheme from '../../styles/theme.style';
+import {pure} from 'recompose';
 
 const images1 = [
   require('../../assets/guidelineImages/a1.png'),
@@ -56,7 +57,7 @@ const GuidelineScreen = () => {
           ImageComponent={FastImage}
           name={'book'}
           size={30}
-          color={'white'}
+          color={myTheme.ICON_COLOR1}
           style={styles.mainHeadingIcon}
         />
       </View>
@@ -122,7 +123,7 @@ const GuidelineScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: myTheme.BACKGROUND_COLOR,
   },
   mainHeadingContainer: {
     backgroundColor: myTheme.PRIMARY_COLOR2,
@@ -137,11 +138,11 @@ const styles = StyleSheet.create({
     marginTop: hp('5%'),
     marginBottom: hp('3%'),
     marginLeft: wp('7%'),
-    marginRight: wp('3%'),
+    marginRight: wp('2%'),
 
     // textAlign: 'center',
     fontSize: wp('7%'),
-    color: 'white',
+    color: myTheme.TEXT_COLOR1,
   },
   guidelineContainer: {
     marginVertical: hp('5%'),
@@ -161,4 +162,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GuidelineScreen;
+export default pure(GuidelineScreen);

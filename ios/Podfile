@@ -8,7 +8,10 @@ target 'covidify' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-  pod 'RealmJS', :path => '../node_modules/realm'
+  # pod 'RealmJS', :path => '../node_modules/realm'
+
+'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
   target 'covidifyTests' do
     inherit! :complete

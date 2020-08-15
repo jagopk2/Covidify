@@ -12,8 +12,6 @@ import {
 import {
   BarChart,
   ContributionGraph,
-  LineChart,
-  PieChart,
   ProgressChart,
   StackedBarChart,
 } from 'react-native-chart-kit';
@@ -109,6 +107,8 @@ PushNotification.configure({
             await AsyncStorage.setItem('activityData', JSON.stringify(temp));
             store.dispatch(setActivity(temp));
           }
+        } else {
+          callNotification4();
         }
         await AsyncStorage.setItem('totalOutsidePoints', tmp2.toString());
         // await AsyncStorage.setItem('maskNotificationStatus', 'true');
@@ -143,6 +143,8 @@ PushNotification.configure({
             await AsyncStorage.setItem('activityData', JSON.stringify(temp));
             store.dispatch(setActivity(temp));
           }
+        } else {
+          callNotification5();
         }
         await AsyncStorage.setItem('totalInsidePoints', tmp2.toString());
 
@@ -325,11 +327,11 @@ const HomePageScreen = () => {
       <Text>Hand Wash Points {handWashPoints}</Text>
       <Text>Total Outside Points {totalOutsidePoints}</Text>
       <Text>Hand Wash Points {totalInsidePoints}</Text> */}
+
       <View style={styles.mainHeadingContainer}>
         <Text style={styles.mainHeading}>{greetingText()}</Text>
         {greetingIcon()}
       </View>
-
       <View style={styles.gridContainer}>
         <Grid>
           <Row style={styles.gridRow}>
@@ -367,14 +369,14 @@ const HomePageScreen = () => {
           total={totalOutsidePoints}
           color1={myTheme.PRIMARY_COLOR1}
           color2={myTheme.PRIMARY_COLOR3}
-          title={'Mask Weared'}
+          title={'Worn Mask'}
         />
         <LineCard
           points={handWashPoints}
           total={totalInsidePoints}
           color1={myTheme.SECONDARY_COLOR1}
           color2={myTheme.SECONDARY_COLOR2}
-          title={'Hand Washed'}
+          title={'Washed Hands'}
         />
       </View>
 
@@ -448,7 +450,7 @@ const greetingIcon = () => {
       <Feather
         name={'sun'}
         size={30}
-        color={'white'}
+        color={myTheme.ICON_COLOR1}
         style={styles.mainHeadingIcon}
       />
     );
@@ -457,7 +459,7 @@ const greetingIcon = () => {
       <Ionicons
         name={'partly-sunny-outline'}
         size={30}
-        color={'white'}
+        color={myTheme.ICON_COLOR1}
         style={styles.mainHeadingIcon}
       />
     );
@@ -466,7 +468,7 @@ const greetingIcon = () => {
       <Feather
         name={'moon'}
         size={30}
-        color={'white'}
+        color={myTheme.ICON_COLOR1}
         style={styles.mainHeadingIcon}
       />
     );
@@ -516,10 +518,38 @@ const callNotification3 = () => {
     tag: '3',
   });
 };
+const callNotification4 = () => {
+  PushNotification.localNotification({
+    /* iOS and Android properties */
+    title: 'Covidify', // (optional)
+    message: 'Kindly wear mask next time', // (required)
+    // actions: '["Yes", "No"]',
+    invokeApp: false,
+    smallIcon: 'ic_launcher',
+    // ongoing: true,
+    autoCancel: true,
+    onlyAlertOnce: true,
+    tag: '3',
+  });
+};
+const callNotification5 = () => {
+  PushNotification.localNotification({
+    /* iOS and Android properties */
+    title: 'Covidify', // (optional)
+    message: 'Kindly wash hands next time', // (required)
+    // actions: '["Yes", "No"]',
+    invokeApp: false,
+    smallIcon: 'ic_launcher',
+    // ongoing: true,
+    autoCancel: true,
+    onlyAlertOnce: true,
+    tag: '3',
+  });
+};
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F5F4FC',
+    backgroundColor: myTheme.BACKGROUND_COLOR,
   },
   gridContainer: {
     height: hp('40%'),
@@ -548,11 +578,12 @@ const styles = StyleSheet.create({
   mainHeading: {
     marginTop: hp('5%'),
     marginBottom: hp('3%'),
-    marginHorizontal: wp('7%'),
+    marginLeft: wp('7%'),
+    marginRight: wp('5%'),
 
     // textAlign: 'center',
     fontSize: wp('7%'),
-    color: 'white',
+    color: myTheme.TEXT_COLOR1,
   },
   mainHeadingContainer: {
     backgroundColor: myTheme.PRIMARY_COLOR2,
@@ -569,6 +600,34 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: wp('5%'),
   },
+  linearGradient: {
+    flex: 1,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
+  },
 });
+const chartConfig = {
+  backgroundGradientFrom: 'white',
+  // backgroundColor: '#e26a00',
+  backgroundGradientTo: 'white',
+  color: (opacity = 1) => myTheme.PRIMARY_COLOR1,
+};
 
+const data = [
+  {
+    name: 'Seoul',
+    population: 21500000,
+    color: myTheme.PRIMARY_COLOR1,
+    legendFontColor: '#7F7F7F',
+    legendFontSize: 15,
+  },
+  {
+    name: 'Toronto',
+    population: 2800000,
+    color: '#F00',
+    legendFontColor: '#7F7F7F',
+    legendFontSize: 15,
+  },
+];
 export default HomePageScreen;

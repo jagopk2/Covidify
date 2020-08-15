@@ -17,6 +17,7 @@ import {
 
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {Text} from 'react-native-elements';
+import myTheme from '../../styles/theme.style';
 
 const CardCircle = ({obtained, total, color1, color2, heading, goal, fill}) => {
   return (
@@ -29,10 +30,12 @@ const CardCircle = ({obtained, total, color1, color2, heading, goal, fill}) => {
         lineCap={'round'}
         fill={fill}
         // fill={}
-        tintColor="white"
+        tintColor={myTheme.BAR_FILL_COLOR1}
         padding={10}
         backgroundColor={color2}>
-        {(fill) => <Text style={{color: 'white'}}>{Math.floor(fill)}%</Text>}
+        {(fill) => (
+          <Text style={{color: myTheme.TEXT_COLOR1}}>{Math.floor(fill)}%</Text>
+        )}
       </AnimatedCircularProgress>
       <View style={styles.pointsTextContainer}>
         <Text style={styles.pointsText}> Goal</Text>
@@ -46,10 +49,10 @@ const CardCircle = ({obtained, total, color1, color2, heading, goal, fill}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: myTheme.BACKGROUND_COLOR,
   },
   pointsText: {
-    color: 'white',
+    color: myTheme.TEXT_COLOR1,
     marginHorizontal: wp('5%'),
     marginVertical: hp('2%'),
   },
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   mainHeading: {
-    color: 'white',
+    color: myTheme.TEXT_COLOR1,
     margin: 10,
     textAlign: 'center',
   },
