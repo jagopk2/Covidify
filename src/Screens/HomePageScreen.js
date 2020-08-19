@@ -478,27 +478,27 @@ const greetingIcon = () => {
 const callNotification = () => {
   PushNotification.localNotification({
     /* iOS and Android properties */
-    title: 'Covidify', // (optional)
-    message: 'Covidify service is running', // (required)
+    title: 'Maskify', // (optional)
+    message: 'Maskify service is running', // (required)
     // actions: '["Yes", "No"]',
     invokeApp: false,
     ongoing: true,
     autoCancel: false,
     onlyAlertOnce: true,
     tag: '1',
-    smallIcon: 'ic_launcher',
+    smallIcon: 'ic_notification',
   });
 };
 const callNotification2 = () => {
   PushNotification.localNotification({
     /* iOS and Android properties */
-    title: 'Covidify', // (optional)
+    title: 'Maskify', // (optional)
     message: 'Did You wear your mask?', // (required)
     actions: '["Yes", "No"]',
     invokeApp: false,
     ongoing: true,
     // autoCancel: true,
-    smallIcon: 'ic_launcher',
+    smallIcon: 'ic_notification',
 
     // onlyAlertOnce: true,
     tag: '2',
@@ -507,11 +507,11 @@ const callNotification2 = () => {
 const callNotification3 = () => {
   PushNotification.localNotification({
     /* iOS and Android properties */
-    title: 'Covidify', // (optional)
+    title: 'Maskify', // (optional)
     message: 'Did You Washed Your Hands?', // (required)
     actions: '["Yes", "No"]',
     invokeApp: false,
-    smallIcon: 'ic_launcher',
+    smallIcon: 'ic_notification',
     ongoing: true,
     // autoCancel: true,
     // onlyAlertOnce: true,
@@ -521,11 +521,11 @@ const callNotification3 = () => {
 const callNotification4 = () => {
   PushNotification.localNotification({
     /* iOS and Android properties */
-    title: 'Covidify', // (optional)
+    title: 'Maskify', // (optional)
     message: 'Kindly wear mask next time', // (required)
     // actions: '["Yes", "No"]',
     invokeApp: false,
-    smallIcon: 'ic_launcher',
+    smallIcon: 'ic_notification',
     // ongoing: true,
     autoCancel: true,
     onlyAlertOnce: true,
@@ -535,11 +535,11 @@ const callNotification4 = () => {
 const callNotification5 = () => {
   PushNotification.localNotification({
     /* iOS and Android properties */
-    title: 'Covidify', // (optional)
-    message: 'Kindly wash hands next time', // (required)
+    title: 'Maskify', // (optional)
+    message: 'Kindly wash hands now', // (required)
     // actions: '["Yes", "No"]',
     invokeApp: false,
-    smallIcon: 'ic_launcher',
+    smallIcon: 'ic_notification',
     // ongoing: true,
     autoCancel: true,
     onlyAlertOnce: true,
@@ -614,20 +614,4 @@ const chartConfig = {
   color: (opacity = 1) => myTheme.PRIMARY_COLOR1,
 };
 
-const data = [
-  {
-    name: 'Seoul',
-    population: 21500000,
-    color: myTheme.PRIMARY_COLOR1,
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Toronto',
-    population: 2800000,
-    color: '#F00',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-];
 export default HomePageScreen;

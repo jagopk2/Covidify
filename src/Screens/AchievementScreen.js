@@ -50,9 +50,9 @@ const logoTitles = [
   'Slow and Steady',
   'Getting Safer',
   'Climbing Success',
-  'Expert',
-  'Corona Killer',
-  'Corona Killer',
+  'Expert Saver',
+  'Virus Killer',
+  'Virus Killer',
 ];
 
 const AchievementScreen = ({navigation}) => {

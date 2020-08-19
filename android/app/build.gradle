@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.covidify"
+        applicationId "com.devjunni.maskify"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

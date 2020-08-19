@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
-target 'covidify' do
+target 'Maskify' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
@@ -13,7 +13,7 @@ target 'covidify' do
 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
-  target 'covidifyTests' do
+  target 'MaskifyTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -28,10 +28,10 @@ target 'covidify' do
   end
 end
 
-target 'covidify-tvOS' do
-  # Pods for covidify-tvOS
+target 'Maskify-tvOS' do
+  # Pods for Maskify-tvOS
 
-  target 'covidify-tvOSTests' do
+  target 'Maskify-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

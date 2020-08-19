@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface covidifyTests : XCTestCase
+@interface MaskifyTests : XCTestCase
 
 @end
 
-@implementation covidifyTests
+@implementation MaskifyTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
 {

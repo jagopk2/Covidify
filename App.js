@@ -32,10 +32,13 @@ import HomePageScreen from './src/Screens/HomePageScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LocationScreen from './src/Screens/LocationScreen';
 import {NavigationContainer} from '@react-navigation/native';
+import OnBoardingScreen from './src/Screens/OnBoardingScreen';
 import {Provider} from 'react-redux';
 import React from 'react';
+import SplashScreen from './src/Screens/SplashScreen';
 import {ThemeProvider} from 'react-native-elements';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 import myTheme from './styles/theme.style';
 import store from './src/store';
 
@@ -51,72 +54,85 @@ const theme = {
     },
   },
 };
+
+const Stack = createStackNavigator();
+
+function TabScreen() {
+  return (
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: myTheme.PRIMARY_COLOR1,
+        inactiveTintColor: 'grey',
+      }}>
+      <Tab.Screen
+        name="Home"
+        component={HomePageScreen}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({color, size}) => (
+            <AntDesign name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Location"
+        component={LocationScreen}
+        options={{
+          tabBarLabel: 'Location',
+          tabBarIcon: ({color, size}) => (
+            <Foundation name="map" color={color} size={size} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Achievements"
+        component={AchievementScreen}
+        options={{
+          tabBarLabel: 'Achievement',
+          tabBarIcon: ({color, size}) => (
+            <Ionicons name="medal-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Activity"
+        component={ActivityScreen}
+        options={{
+          tabBarLabel: 'Activity',
+          tabBarIcon: ({color, size}) => (
+            <Foundation name="clipboard-notes" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Guidelines"
+        component={GuidelineScreen}
+        options={{
+          tabBarLabel: 'Guidelines',
+          tabBarIcon: ({color, size}) => (
+            <AntDesign name="book" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
 const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <NavigationContainer>
-          <Tab.Navigator
-            tabBarOptions={{
-              activeTintColor: myTheme.PRIMARY_COLOR1,
-              inactiveTintColor: 'grey',
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
             }}>
-            <Tab.Screen
-              name="Home"
-              component={HomePageScreen}
-              options={{
-                tabBarLabel: 'Home',
-                tabBarIcon: ({color, size}) => (
-                  <AntDesign name="home" color={color} size={size} />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name="Location"
-              component={LocationScreen}
-              options={{
-                tabBarLabel: 'Location',
-                tabBarIcon: ({color, size}) => (
-                  <Foundation name="map" color={color} size={size} />
-                ),
-              }}
-            />
+            <Stack.Screen name="SplashScreen" component={SplashScreen} />
+            <Stack.Screen name="Instructions" component={OnBoardingScreen} />
 
-            <Tab.Screen
-              name="Achievements"
-              component={AchievementScreen}
-              options={{
-                tabBarLabel: 'Achievement',
-                tabBarIcon: ({color, size}) => (
-                  <Ionicons name="medal-outline" color={color} size={size} />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name="Activity"
-              component={ActivityScreen}
-              options={{
-                tabBarLabel: 'Activity',
-                tabBarIcon: ({color, size}) => (
-                  <Foundation
-                    name="clipboard-notes"
-                    color={color}
-                    size={size}
-                  />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name="Guidelines"
-              component={GuidelineScreen}
-              options={{
-                tabBarLabel: 'Guidelines',
-                tabBarIcon: ({color, size}) => (
-                  <AntDesign name="book" color={color} size={size} />
-                ),
-              }}
-            />
-          </Tab.Navigator>
+            <Stack.Screen name="MyHome" component={TabScreen} />
+          </Stack.Navigator>
           <FlashMessage position="top" animated={true} />
         </NavigationContainer>
       </ThemeProvider>
